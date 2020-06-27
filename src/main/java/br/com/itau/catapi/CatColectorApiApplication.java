@@ -3,15 +3,16 @@ package br.com.itau.catapi;
 import br.com.itau.catapi.beans.Foto;
 import br.com.itau.catapi.beans.Gato;
 import br.com.itau.catapi.beans.Raca;
-import br.com.itau.catapi.dto.CatDTO;
+import br.com.itau.catapi.dto.CatFotoDTO;
+import br.com.itau.catapi.enums.CategoriaFoto;
 import br.com.itau.catapi.enums.TipoFoto;
 import br.com.itau.catapi.services.FotosService;
+import br.com.itau.catapi.services.GatosService;
 import br.com.itau.catapi.services.RacaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -29,11 +30,13 @@ public class CatColectorApiApplication {
 
 	private RacaService racaService;
 	private FotosService fotosService;
+	private GatosService gatosService;
 
 	@Autowired
-	public CatColectorApiApplication(RacaService racaService, FotosService fotosService) {
+	public CatColectorApiApplication(RacaService racaService, FotosService fotosService, GatosService gatosService) {
 		this.racaService = racaService;
 		this.fotosService = fotosService;
+		this.gatosService = gatosService;
 	}
 
 	public static void main(String[] args) {
@@ -46,18 +49,14 @@ public class CatColectorApiApplication {
 			List<Raca> racas = racaService.buscarTodos();
 
 			List<Gato> gatos = new ArrayList<>();
-
 			int i = 1;
 			for (Raca raca : racas) {
 				System.out.println(i++ + " - " + raca);
 
 				String racaId = raca.getId();
 
-				// Pegar 3 fotos
+				// Pegar 3 fotos para cada raça
 				List<Foto> fotos = fotosService.buscarFotosPelaRaca(racaId);
-				System.out.println(fotos);
-				System.out.println(raca);
-
 				Gato gato = Gato.builder().raca(raca).fotos(fotos).build();
 				gatos.add(gato);
 			}
@@ -68,41 +67,14 @@ public class CatColectorApiApplication {
 			}
 
 
-
 			// Até 3 Fotos com chapéu
-			String URL_FOTOS = URL_BASE + "/images/search?limit=3&category_ids=1&order=ASC";
-			List<Gato> gatosComChapeu = new ArrayList<>();
-			ResponseEntity<List<CatDTO>> fotosComChapeuResponse = restTemplate.exchange(
-					URL_FOTOS, HttpMethod.GET, null, new ParameterizedTypeReference<List<CatDTO>>() {
-					});
-			List<CatDTO> fotosComChapeu = fotosComChapeuResponse.getBody();
-			fotosComChapeu.forEach(foto -> {
-				Foto fotoComChapeu = Foto.builder().urlFoto(foto.getUrl()).tipoFoto(TipoFoto.FOTO_CHAPEU).build();
-				Raca raca = foto.getRaca() != null && foto.getRaca().size() > 0 ? foto.getRaca().get(0) : null;
-
-				Gato gato = Gato.builder().raca(raca).fotos(Arrays.asList(fotoComChapeu)).build();
-				gatosComChapeu.add(gato);
-			});
-
+			List<Gato> gatosComChapeu = this.gatosService.buscarPeloTipoDaFoto(CategoriaFoto.COM_CHAPEU);
 			System.out.println(">>>> GATOS COM CHAPEU: " + gatosComChapeu);
 
 
-			// Fotos com óculos
-			URL_FOTOS = URL_BASE + "/images/search?limit=3&category_ids=4&order=ASC";
-			List<Gato> gatosComOculos = new ArrayList<>();
-			ResponseEntity<List<CatDTO>> fotosComOculosResponse = restTemplate.exchange(
-					URL_FOTOS, HttpMethod.GET, null, new ParameterizedTypeReference<List<CatDTO>>() {
-					});
-			List<CatDTO> fotosDeOculos = fotosComOculosResponse.getBody();
-			fotosDeOculos.forEach(foto -> {
-				Foto fotoComOculos = Foto.builder().urlFoto(foto.getUrl()).tipoFoto(TipoFoto.FOTO_OCULOS).build();
-				Raca raca = foto.getRaca() != null && foto.getRaca().size() > 0 ? foto.getRaca().get(0) : null;
-
-				Gato gato = Gato.builder().raca(raca).fotos(Arrays.asList(fotoComOculos)).build();
-				gatosComOculos.add(gato);
-			});
+			// Até 3 Fotos com óculos
+			List<Gato> gatosComOculos = this.gatosService.buscarPeloTipoDaFoto(CategoriaFoto.COM_OCULOS);
 			System.out.println(">>>> GATOS COM OCULOS: " + gatosComOculos);
-
 		};
 	}
 

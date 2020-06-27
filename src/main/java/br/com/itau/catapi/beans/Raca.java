@@ -17,6 +17,4 @@ public class Raca {
     @JsonAlias("origin")
     private String origem;
 
-
-
 }

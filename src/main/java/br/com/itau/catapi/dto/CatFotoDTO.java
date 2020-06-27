@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Data
-public class CatDTO {
+public class CatFotoDTO {
 
     @JsonAlias("breeds")
     private List<Raca> raca;
