@@ -11,6 +11,8 @@ import java.util.Optional;
 @Data
 public class CatFotoDTO {
 
+    @JsonAlias("id")
+    private String id;
     @JsonAlias("breeds")
     private List<Raca> raca;
     @JsonAlias("url")

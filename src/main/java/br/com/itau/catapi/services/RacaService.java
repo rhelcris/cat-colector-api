@@ -1,6 +1,8 @@
 package br.com.itau.catapi.services;
 
 import br.com.itau.catapi.beans.Raca;
+import br.com.itau.catapi.repositories.RacasRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -13,13 +15,16 @@ import java.util.List;
 @Service
 public class RacaService {
 
-    private final RestTemplate restTemplate;
-
     @Value("${url.base.cat-api}")
     private String URL_BASE;
 
-    RacaService(RestTemplate restTemplate) {
+    private final RestTemplate restTemplate;
+    private RacasRepository racaRepository;
+
+    @Autowired
+    RacaService(RestTemplate restTemplate, RacasRepository racaRepository) {
         this.restTemplate = restTemplate;
+        this.racaRepository = racaRepository;
     }
 
     public List<Raca> buscarTodos() {
@@ -30,4 +35,8 @@ public class RacaService {
         return racas;
     }
 
+
+    public void salvar(List<Raca> racas) {
+        racaRepository.saveAll(racas);
+    }
 }
