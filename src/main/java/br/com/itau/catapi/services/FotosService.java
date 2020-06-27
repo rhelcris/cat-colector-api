@@ -46,12 +46,4 @@ public class FotosService {
         return fotos;
     }
 
-//			fotosComChapeu.forEach(foto -> {
-//        Foto fotoComChapeu = Foto.builder().urlFoto(foto.getUrl()).tipoFoto(TipoFoto.FOTO_CHAPEU).build();
-//        Raca raca = foto.getRaca() != null && foto.getRaca().size() > 0 ? foto.getRaca().get(0) : null;
-//
-//        Gato gato = Gato.builder().raca(raca).fotos(Arrays.asList(fotoComChapeu)).build();
-//        gatosComChapeu.add(gato);
-//    });
-
 }

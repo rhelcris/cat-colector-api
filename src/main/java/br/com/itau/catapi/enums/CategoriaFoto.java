@@ -13,9 +13,4 @@ public enum CategoriaFoto {
     private Integer id;
     private String descricao;
 
-//    CategoriaFoto(Integer id, String descricao) {
-//        this.id = id;
-//        this.descricao = descricao;
-//    }
-
 }

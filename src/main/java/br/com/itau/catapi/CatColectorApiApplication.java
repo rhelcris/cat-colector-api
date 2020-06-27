@@ -26,15 +26,13 @@ import java.util.List;
 @SpringBootApplication
 public class CatColectorApiApplication {
 
-	private static final String URL_BASE = "https://api.thecatapi.com/v1";
-
 	private RacaService racaService;
 	private FotosService fotosService;
 	private GatosService gatosService;
 
 	@Autowired
 	public CatColectorApiApplication(RacaService racaService, FotosService fotosService, GatosService gatosService) {
-		this.racaService = racaService;
+		this.racaService  = racaService;
 		this.fotosService = fotosService;
 		this.gatosService = gatosService;
 	}
@@ -68,12 +66,12 @@ public class CatColectorApiApplication {
 
 
 			// Até 3 Fotos com chapéu
-			List<Gato> gatosComChapeu = this.gatosService.buscarPeloTipoDaFoto(CategoriaFoto.COM_CHAPEU);
+			List<Gato> gatosComChapeu = this.gatosService.buscarPeloTipoECategoriaDaFoto(CategoriaFoto.COM_CHAPEU, TipoFoto.FOTO_CHAPEU);
 			System.out.println(">>>> GATOS COM CHAPEU: " + gatosComChapeu);
 
 
 			// Até 3 Fotos com óculos
-			List<Gato> gatosComOculos = this.gatosService.buscarPeloTipoDaFoto(CategoriaFoto.COM_OCULOS);
+			List<Gato> gatosComOculos = this.gatosService.buscarPeloTipoECategoriaDaFoto(CategoriaFoto.COM_OCULOS, TipoFoto.FOTO_OCULOS);
 			System.out.println(">>>> GATOS COM OCULOS: " + gatosComOculos);
 		};
 	}

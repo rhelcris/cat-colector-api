@@ -23,12 +23,12 @@ public class GatosService {
         this.fotosService = fotosService;
     }
 
-    public List<Gato> buscarPeloTipoDaFoto(CategoriaFoto categoriaFoto) {
+    public List<Gato> buscarPeloTipoECategoriaDaFoto(CategoriaFoto categoriaFoto, TipoFoto tipoFoto) {
         List<CatFotoDTO> fotos = fotosService.buscarFotosPeloCategoria(categoriaFoto);
 
         List<Gato> listaDeGatos = new ArrayList<>();
         fotos.forEach(foto -> {
-            Foto fotoTipado = Foto.builder().urlFoto(foto.getUrl()).tipoFoto(TipoFoto.FOTO_CHAPEU).build();
+            Foto fotoTipado = Foto.builder().urlFoto(foto.getUrl()).tipoFoto(tipoFoto).build();
             Raca raca = foto.getRaca() != null && foto.getRaca().size() > 0 ? foto.getRaca().get(0) : null;
 
             Gato gato = Gato.builder().raca(raca).fotos(Arrays.asList(fotoTipado)).build();
