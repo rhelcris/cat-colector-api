@@ -27,13 +27,11 @@ import java.util.List;
 public class CatColectorApiApplication {
 
 	private RacaService racaService;
-	private FotosService fotosService;
 	private GatosService gatosService;
 
 	@Autowired
-	public CatColectorApiApplication(RacaService racaService, FotosService fotosService, GatosService gatosService) {
+	public CatColectorApiApplication(RacaService racaService, GatosService gatosService) {
 		this.racaService  = racaService;
-		this.fotosService = fotosService;
 		this.gatosService = gatosService;
 	}
 
@@ -51,11 +49,7 @@ public class CatColectorApiApplication {
 			for (Raca raca : racas) {
 				System.out.println(i++ + " - " + raca);
 
-				String racaId = raca.getId();
-
-				// Pegar 3 fotos para cada raça
-				List<Foto> fotos = fotosService.buscarFotosPelaRaca(racaId);
-				Gato gato = Gato.builder().raca(raca).fotos(fotos).build();
+				Gato gato = this.gatosService.buscarGatoComAteTresFotosPelaRaca(raca);
 				gatos.add(gato);
 			}
 

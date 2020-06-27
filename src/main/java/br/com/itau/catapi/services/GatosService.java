@@ -38,4 +38,9 @@ public class GatosService {
         return listaDeGatos;
     }
 
+    public Gato buscarGatoComAteTresFotosPelaRaca(Raca raca) {
+        List<Foto> fotos = fotosService.buscarFotosPelaRaca(raca.getId());
+        return Gato.builder().raca(raca).fotos(fotos).build();
+    }
+
 }
