@@ -5,6 +5,8 @@ import br.com.itau.catapi.beans.Gato;
 import br.com.itau.catapi.beans.Raca;
 import br.com.itau.catapi.dto.CatDTO;
 import br.com.itau.catapi.enums.TipoFoto;
+import br.com.itau.catapi.services.RacaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,6 +26,13 @@ public class CatColectorApiApplication {
 
 	private static final String URL_BASE = "https://api.thecatapi.com/v1";
 
+	private RacaService racaService;
+
+	@Autowired
+	public CatColectorApiApplication(RacaService racaService) {
+		this.racaService = racaService;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(CatColectorApiApplication.class, args);
 	}
@@ -31,16 +40,12 @@ public class CatColectorApiApplication {
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
 		return args -> {
-			ResponseEntity<List<Raca>> forEntity = restTemplate.exchange(
-					URL_BASE + "/breeds", HttpMethod.GET, null, new ParameterizedTypeReference<List<Raca>>() {
-					});
-
-			System.out.println(forEntity.getBody());
+			List<Raca> racas = racaService.buscarTodos();
 
 			List<Gato> gatos = new ArrayList<>();
 
 			int i = 1;
-			for (Raca raca : forEntity.getBody()) {
+			for (Raca raca : racas) {
 				System.out.println(i++ + " - " + raca);
 
 				List<Foto> fotosDoGato = new ArrayList<>();
