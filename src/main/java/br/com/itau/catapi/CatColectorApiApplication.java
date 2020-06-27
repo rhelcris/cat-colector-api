@@ -5,6 +5,7 @@ import br.com.itau.catapi.beans.Gato;
 import br.com.itau.catapi.beans.Raca;
 import br.com.itau.catapi.dto.CatDTO;
 import br.com.itau.catapi.enums.TipoFoto;
+import br.com.itau.catapi.services.FotosService;
 import br.com.itau.catapi.services.RacaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -27,10 +28,12 @@ public class CatColectorApiApplication {
 	private static final String URL_BASE = "https://api.thecatapi.com/v1";
 
 	private RacaService racaService;
+	private FotosService fotosService;
 
 	@Autowired
-	public CatColectorApiApplication(RacaService racaService) {
+	public CatColectorApiApplication(RacaService racaService, FotosService fotosService) {
 		this.racaService = racaService;
+		this.fotosService = fotosService;
 	}
 
 	public static void main(String[] args) {
@@ -48,22 +51,14 @@ public class CatColectorApiApplication {
 			for (Raca raca : racas) {
 				System.out.println(i++ + " - " + raca);
 
-				List<Foto> fotosDoGato = new ArrayList<>();
 				String racaId = raca.getId();
 
 				// Pegar 3 fotos
-				String URL_FOTOS = URL_BASE + "/images/search?limit=3&breed_ids=" + racaId;
-				ResponseEntity<List<Foto>> fotosResponse = restTemplate.exchange(
-						URL_FOTOS, HttpMethod.GET, null, new ParameterizedTypeReference<List<Foto>>() {
-						});
-				List<Foto> fotos = fotosResponse.getBody();
-				fotos.forEach(foto -> foto.setTipoFoto(TipoFoto.FOTO));
-				fotosDoGato.addAll(fotos);
-
-
+				List<Foto> fotos = fotosService.buscarFotosPelaRaca(racaId);
+				System.out.println(fotos);
 				System.out.println(raca);
 
-				Gato gato = Gato.builder().raca(raca).fotos(fotosDoGato).build();
+				Gato gato = Gato.builder().raca(raca).fotos(fotos).build();
 				gatos.add(gato);
 			}
 
