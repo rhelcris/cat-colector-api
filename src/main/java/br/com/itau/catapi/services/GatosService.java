@@ -7,6 +7,8 @@ import br.com.itau.catapi.dto.CatFotoDTO;
 import br.com.itau.catapi.enums.CategoriaFoto;
 import br.com.itau.catapi.enums.TipoFoto;
 import br.com.itau.catapi.repositories.GatosRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import java.util.List;
 @Service
 public class GatosService {
 
+    private static final Logger logger = LoggerFactory.getLogger(GatosService.class);
+
     private FotosService fotosService;
     private GatosRepository gatosRepository;
 
@@ -28,6 +32,7 @@ public class GatosService {
     }
 
     public List<Gato> buscarPeloTipoECategoriaDaFoto(CategoriaFoto categoriaFoto, TipoFoto tipoFoto) {
+        logger.info("Busca gatos pela Categoria: " + categoriaFoto.getDescricao() + " e pelo Tipo de Foto: " + tipoFoto.toString());
         List<CatFotoDTO> fotos = fotosService.buscarFotosPeloCategoria(categoriaFoto);
 
         List<Gato> listaDeGatos = new ArrayList<>();
@@ -43,16 +48,20 @@ public class GatosService {
     }
 
     public Gato buscarGatoComAteTresFotosPelaRaca(Raca raca) {
+        logger.info("Busca gatos com até três fotos pela raça.");
         List<Foto> fotos = fotosService.buscarFotosPelaRaca(raca.getId());
         return Gato.builder().raca(raca).fotos(fotos).build();
     }
 
     @Transactional
     public void salvar(List<Gato> gatos) {
+        logger.info("Iniciando a gravação da lista de gatos");
         gatosRepository.saveAll(gatos);
+        logger.info("Gatos foram gravados com sucesso!");
     }
 
     public List<Gato> gerarGatosComTresFotosPorCadaRaca(List<Raca> racas) {
+        logger.info("Iniciando a geração de gatos com três fotos para cada Raça");
         List<Gato> gatos = new ArrayList<>();
         for (Raca raca : racas) {
             Gato gato = this.buscarGatoComAteTresFotosPelaRaca(raca);

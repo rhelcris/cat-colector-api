@@ -6,7 +6,6 @@ import br.com.itau.catapi.enums.CategoriaFoto;
 import br.com.itau.catapi.enums.TipoFoto;
 import br.com.itau.catapi.services.GatosService;
 import br.com.itau.catapi.services.RacaService;
-import org.apache.catalina.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @SpringBootApplication
