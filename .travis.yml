@@ -1,0 +1,21 @@
+language: java
+jdk:
+  - openjdk8
+before_install:
+  - sudo apt-get update
+  - echo "Let's start Maven Package!"
+  - mvn clean package -DskipTests
+  - echo "We are in the docker folder"
+script:
+  - docker-compose build
+before_deploy:
+  echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+deploy:
+  provider: script
+  script:
+    docker tag cats-api-collector:latest rhelcris/cats-api-collector:latest;
+    docker push rhelcris/cats-api-collector:latest;
+  on:
+    branch: master
+notifications:
+  email: false
